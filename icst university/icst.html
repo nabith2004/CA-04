@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ICST - Campus of Science and Technology</title>
+  <style>
+    /* Reset & font */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body, button, input, textarea { font-family: Arial, sans-serif; }
+    a { text-decoration:none; color: inherit; }
+    img { max-width:100%; display:block; }
+
+    /* Body background */
+    body {
+      background: #181d2a;
+      background-image: url('back.jpg');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      padding: 0;
+      margin: 0;
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: inherit;
+      /* Make background clearer: remove blur, keep brightness */
+      filter: brightness(0.8);
+      background-image: url('back.jpg');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+    }
+
+    main, section, header, footer {
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 15px;  /* Undo: less left and right padding */
+      padding-right: 15px;
+    }
+
+    /* Navbar */
+    .navbar {
+      width: 80vw;
+      min-width: 100vw;
+      left: 0;
+      right: 0;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+      border-radius: 0;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      /* Make the bar smaller vertically */
+      padding-top: 22px;
+      padding-bottom: 22px;
+      padding-left: 40px;
+      padding-right: 40px;
+      background: linear-gradient(90deg, #ffffff 0%, #3b66b5 80%);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar .logo { font-size:20px; font-weight:600; color:#fff; }
+    .navbar .menu { display:flex; gap:20px; }
+    .navbar .menu a { 
+      color: #111 !important;
+      padding: 12px 22px;
+      font-size: 1.35rem;
+      font-weight: 600;
+    } /* Make menu links white */
+    .navbar .menu a:hover { color:#0053a0 !important; } /* Optional: gold on hover */
+
+    /* Hero slider */
+    .hero { position:relative; overflow:hidden; }
+    .slides { 
+      display:flex; 
+      transition: transform 0.7s cubic-bezier(0.77, 0, 0.175, 1); /* Smooth slide animation */
+    }
+    .slide { 
+      min-width:100%; 
+      position:relative; 
+      height:500px; /* Increased from 300px to 500px for XL size */
+      background-size:cover; 
+      background-position:center; 
+    }
+    .slide h1 { 
+      position:absolute; 
+      bottom:40px; /* More space from bottom */
+      left:60px;   /* More space from left */
+      font-size:3rem; /* Larger heading */
+      color:#fff; 
+      background:rgba(0,0,0,0.5); 
+      padding:20px 40px; 
+      border-radius:8px; 
+    }
+
+    /* Sections */
+    section { 
+      padding-top: 80px;
+      padding-bottom: 80px;
+    }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:20px; }
+
+    .card { background:#fff; padding:20px; border-radius:8px; box-shadow:0 3px 15px rgba(0,0,0,0.05); text-align:center; }
+    .card h3 { margin-bottom:10px; color:#0053a0; }
+    .card p { font-size:14px; color:#555; }
+
+    .cta { text-align:center; }
+    .cta button { 
+      background:#0053a0; 
+      color:#fff; 
+      padding:20px 40px;
+      font-size:20px;
+      border:none; 
+      border-radius:8px; 
+      cursor:pointer; 
+    }
+    .cta button:hover { background:#003d7a; }
+
+    /* Footer */
+    footer {
+  width: 100vw;
+  min-width: 100vw;
+  left: 0;
+  right: 0;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  border-radius: 0;
+  box-sizing: border-box;
+  background: linear-gradient(90deg, #ffffff 0%, #0053a0 100%);
+  color: #fff;
+  padding: 18px 20px; /* Reduced padding for a smaller footer */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px; /* Reduced gap */
+}
+    footer h4 { margin-bottom:10px; }
+    footer a { color:#fff; font-size:14px; display:block; margin-bottom:3px; }
+    footer .social a { display:inline-block; margin-right:10px; }
+    footer h4,
+footer a,
+footer p,
+footer .social a {
+  color: #111 !important;
+}
+
+    /* Popup overlay */
+    .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:none; justify-content:center; align-items:center; z-index:200; }
+    .popup { background:#fff; padding:30px; border-radius:12px; width:90%; max-width:400px; position:relative; }
+    .popup .close-btn { position:absolute; top:15px; right:20px; cursor:pointer; font-size:24px; }
+    .popup input, .popup textarea, .popup button {
+      width:100%; margin:10px 0; padding:12px; border:1px solid #ccc; border-radius:8px;
+    }
+    .popup button { 
+      background:#0053a0; 
+      color:#fff; 
+      border:none; 
+      cursor:pointer; 
+      font-size:16px; 
+      padding: 20px 40px;
+    }
+    .popup button:hover { background:#003d7a; }
+
+    /* Success message */
+    #successMsg { color:green; display:none; text-align:center; margin-top:10px; }
+
+    @keyframes fadeInDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-60px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo" style="display:flex;align-items:center;">
+      <img src="logo.png" alt="ICST Logo" style="height:60px;margin-right:10px;">
+    </div>
+    <nav class="menu">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#faculties">Faculties</a>
+      <a href="#Programs">Programs</a>
+      <a href="#admissions">Admissions</a>
+      <a href="#contact">Contact</a>
+      <!-- Social icons with SVG logos -->
+      <a href="https://facebook.com/" target="_blank" title="Facebook" style="display:inline-flex;align-items:center;">
+        <img src="fa.png" alt="Facebook" style="height:24px;width:24px;margin-left:8px;">
+      </a>
+      <a href="https://instagram.com/" target="_blank" title="Instagram" style="display:inline-flex;align-items:center;">
+        <img src="ti.png" alt="Instagram" style="height:24px;width:24px;margin-left:8px;">
+      </a>
+      <a href="https://tiktok.com/" target="_blank" title="TikTok" style="display:inline-flex;align-items:center;">
+        <img src="in.jpg" alt="TikTok" style="height:24px;width:24px;margin-left:8px;">
+      </a>
+    </nav>
+  </header>
+
+  <!-- ICST Logo Section -->
+  <div style="display:flex; flex-direction:column; align-items:center; margin-top:10px; margin-bottom:10px;">
+    <img src="ic.png" alt="ICST Logo IC" style="height:150px; width:auto; margin-bottom:4px;">
+  </div>
+
+  <!-- Welcome Section -->
+  <section style="margin-top:60px;">
+
+    <h1 
+      style="text-align:center; 
+             font-size:5.8rem; 
+             margin-bottom:100px; 
+             animation: fadeInDown 1.5s ease;
+             color: #fff;
+             font-weight:bold;">
+      Welcome to International Campus of Science and Technology
+    </h1>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" 
+    style="margin-top:80px; margin-bottom:80px; 
+           background: url('max.jpg') center center/cover no-repeat, linear-gradient(90deg, #e3f0ffcc 0%, #f7f9fcc0 100%);
+           border-radius:18px;">
+    <h2 style="text-align:center; color:#0053a0; margin-bottom:50px; font-size:3rem; font-weight:bold;">About ICST</h2>
+    <p style="max-width:1000px; margin:0 auto; font-size:1.7rem; color:black; text-align:center; line-height:1.2; font-weight:bold;">
+      The International Campus of Science and Technology (ICST) is dedicated to providing world-class education in engineering, computing, management, and more. Our mission is to empower students with the knowledge, skills, and values needed to excel in a rapidly changing world. With state-of-the-art facilities, experienced faculty, and a vibrant campus life, ICST is the ideal place to launch your academic and professional journey.
+    </p>
+  </section>
+
+  <!-- Faculties Section -->
+  <section id="faculties" style="margin-top:0;">
+    <h2 style="text-align:center;color:#fff;margin-bottom:30px;">Our Faculties</h2>
+    <div class="grid">
+      <div class="card">
+        <img src="r.jpeg" alt="Engineering Image" style="height:300px; margin-bottom:16px; display:block; margin-left:auto; margin-right:auto;">
+        <h3 style="font-size:2rem;">Engineering</h3>
+        <p style="font-size:1.3rem; font-weight:bold;">
+          Engineering is the application of science and mathematics to solve real-world problems. It involves designing, building, and maintaining structures, machines, and systems. Engineers play a key role in developing new technologies and improving everyday life. There are many branches, including civil, mechanical, electrical, and computer engineering. Engineering helps shape the modern world through innovation and creativity.
+        </p>
+      </div>
+      <div class="card">
+        <img src="ics.jpg" alt="ICS Image" style="height:300px; margin-bottom:16px; display:block; margin-left:auto; margin-right:auto;">
+        <h3 style="font-size:2rem;"><b>Information Technology (IT)</b></h3>
+        <p style="font-size:1.3rem; font-weight:bold;">
+          Information Technology (IT) is the use of computers, networks, and software to manage and process information. It plays a vital role in modern businesses, education, healthcare, and communication. IT helps organizations improve efficiency, store data securely, and automate tasks. From websites to mobile apps, IT supports digital solutions in everyday life. As technology evolves, IT continues to shape the future of work and innovation.
+        </p>
+      </div>
+      <div class="card">
+        <img src="m.jpg" alt="Management Studies Image" style="height:300px; margin-bottom:16px; display:block; margin-left:auto; margin-right:auto;">
+        <h3 style="font-size:2rem;">Management Studies</h3>
+        <p style="font-size:1.3rem; font-weight:bold;">
+          Management Studies is the field that focuses on planning, organizing, leading, and controlling business activities. It teaches students how to make strategic decisions and manage people and resources effectively. The subject includes areas like finance, marketing, human resources, and operations. Management skills are essential for leadership roles in any organization. Studying management helps build problem-solving, communication, and leadership abilities.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Programs Section -->
+  <section id="Programs" style="background:#f7f9fc; margin-top:60px;">
+    <h2 style="text-align:center;color:#0053a0;margin-bottom:30px;">Events</h2>
+    <div class="grid">
+      <div class="card">
+        <img src="camp.jpg" alt="English Camp" style="height:300px; margin-bottom:16px; display:block; margin-left:auto; margin-right:auto;">
+        <h3> English Camp </h3>
+        <p style="font-weight:bold;">We had an English Camp where we improved our English through fun activities and games. The camp also highlighted Sinhala culture with traditional songs, dances, and food.</p>
+      </div>
+      <div class="card">
+        <img src="stage.jpg" alt="Stage Programs" style="height:300px; margin-bottom:16px; display:block; margin-left:auto; margin-right:auto;">
+        <h3>Stage Programs</h3>
+        <p style="font-weight:bold;">There were stage programs during the English Camp where students performed dramas, speeches, and songs in English. Some performances also showcased Sinhala culture through traditional dance and music..</p>
+      </div>
+      <div class="card">
+        <img src="ground.jpg" alt="Ground Programs" style="height:300px; margin-bottom:16px; display:block; margin-left:auto; margin-right:auto;">
+        <h3>Ground Programs</h3>
+        <p style="font-weight:bold;">The Avurudu Festival had many fun ground programs like Kotta Pora (pillow fighting), Kana Mutti (pot breaking), and tug of war. These traditional games brought everyone together and added excitement to the celebration.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Admissions CTA -->
+  <section id="admissions" class="cta" style="margin-top:70px;">
+    <h2 style="color:#fff;">Admissions Are Now Open! Apply Now</h2>
+    <a href="https://forms.gle/YOUR_GOOGLE_FORM_ID" target="_blank" style="display:inline-block; background:#0053a0; color:#fff; padding:20px 40px; font-size:20px; border:none; border-radius:8px; text-decoration:none; cursor:pointer;">Apply Now</a>
+  </section>
+
+  <!-- Footer Contact -->
+  <footer id="contact">
+    <div>
+      <h4>Contact Us</h4>
+      <p>ICST, University Park<br>+94 74 3444 444<br>admissions@icst.edu.lk</p>
+      <div class="social">
+        <a href="#">Facebook</a><a href="#">Instagram</a>
+      </div>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <a href="#faculties">Faculties</a>
+      <a href="#programs">Programs</a>
+      <a href="#admissions">Admissions</a>
+    </div>
+  </footer>
+
+  <!-- Popup Inquiry Form -->
+  <div class="overlay" id="overlay">
+    <div class="popup">
+      <span class="close-btn" onclick="closePopup()">&times;</span>
+      <h3>Inquiry Form</h3>
+      <form id="inqForm">
+        <input name="name" type="text" placeholder="Full Name" required />
+        <input name="email" type="email" placeholder="Email" required />
+        <input name="phone" type="tel" placeholder="Phone Number" required />
+        <textarea name="message" placeholder="Your Message" required></textarea>
+        <button type="submit">Submit</button>
+        <div id="successMsg">✔ Thank you! We'll be in touch soon.</div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Hero slider autoplay
+    let idx = 0;
+    setInterval(() => {
+      const slides = document.getElementById('slides');
+      slides.style.opacity = 0.3; // Fade out
+      setTimeout(() => {
+        idx = (idx + 1) % slides.children.length;
+        slides.style.transform = `translateX(-${idx * 100}%)`;
+        slides.style.opacity = 1; // Fade in
+      }, 350); // Half of transition duration
+    }, 4000);
+
+    // Popup functions
+    function openPopup() { document.getElementById('overlay').style.display = 'flex'; }
+    function closePopup() { document.getElementById('overlay').style.display = 'none'; }
+
+    // Form submission (Google Sheets / PHP logic)
+    document.getElementById('inqForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const fm = this;
+      const data = new FormData(fm);
+
+      // Choose ONE: Google Sheets or PHP
+      // await fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', { method:'POST', body:data });
+      await fetch('send.php', { method:'POST', body:data });
+
+      document.getElementById('successMsg').style.display = 'block';
+      setTimeout(() => {
+        fm.reset();
+        document.getElementById('successMsg').style.display = 'none';
+        closePopup();
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
